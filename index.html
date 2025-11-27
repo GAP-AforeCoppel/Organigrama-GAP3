@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organigrama Interactivo - Gerencia de Atención al Público</title>
+    <!-- Incluyendo Tailwind CSS para un diseño moderno y responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Incluyendo Google Fonts para una tipografía más agradable -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Estilos personalizados para el organigrama dinámico */
+        :root {
+            --color-blue: #002060;
+            --color-yellow: #FFD966;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb; /* Un gris muy claro para suavizar el fondo */
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .card-wrapper {
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 10;
+        }
+        .card-content {
+             min-width: 190px;
+        }
+        .card-content img { cursor: zoom-in; }
+        .card-content img[src*="placehold.co"] { cursor: default; }
+
+        /* --- Estilos de Interacción --- */
+        .card-wrapper.dimmed {
+            opacity: 0.3;
+            transform: scale(0.95);
+        }
+        .card-wrapper.highlight-search {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        .card-wrapper.highlight-search .card-content {
+            box-shadow: 0 0 0 4px var(--color-yellow);
+        }
+
+
+        /* --- VISTA VERTICAL: ESTILO DE LÍNEAS --- */
+        .vertical-view .tree ul {
+            position: relative;
+            padding-top: 50px; /* Espacio para la línea superior */
+            display: flex;
+            justify-content: center;
+        }
+        
+        .vertical-view .tree li {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 0 10px; /* Espacio horizontal entre tarjetas */
+        }
+        
+        /* Conector vertical que sube de la tarjeta al conector horizontal */
+        .vertical-view .tree li::before {
+            content: '';
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 25px;
+            background-color: var(--color-blue);
+        }
+        
+        /* Conector horizontal que une a los hermanos */
+        .vertical-view .tree li::after {
+            content: '';
+            position: absolute;
+            top: -25px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--color-blue);
+        }
+
+        /* Ocultar conectores donde no son necesarios */
+        .vertical-view .tree > ul > li::before, .vertical-view .tree > ul > li::after { display: none; }
+        .vertical-view .tree li:only-child::after { display: none; }
+        .vertical-view .tree li:first-child::after { left: 50%; width: 50%; }
+        .vertical-view .tree li:last-child::after { left: 0; width: 50%; }
+        
+        /* Conector vertical que baja de un padre (si tiene hijos) */
+        .vertical-view .tree li:has(> ul) > .card-wrapper::after {
+            content: '';
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 25px;
+            background-color: var(--color-blue);
+        }
+        
+        /* --- AJUSTES PARA ROLES DE SOPORTE --- */
+        /* Oculta el conector vertical para el rol de soporte. */
+        .vertical-view .tree li.support-role::before {
+            display: none;
+        }
+        /* Restaura el conector horizontal para que la línea no se corte. */
+        .vertical-view .tree li.support-role::after {
+            background-color: var(--color-blue);
+        }
+
+
+        /* --- VISTA HORIZONTAL --- */
+        .horizontal-view .tree-container {
+            display: flex;
+            align-items: center;
+            padding: 2rem;
+            min-width: 1800px;
+        }
+        .horizontal-view .gerente-col {
+            position: relative;
+            padding-right: 80px;
+        }
+        .horizontal-view .gerente-col::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--color-blue);
+        }
+        .horizontal-view .jefes-col {
+            position: relative;
+            padding-left: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        .horizontal-view .jefes-col::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 100%;
+            background-color: var(--color-blue);
+        }
+        .horizontal-view .jefe-item {
+            position: relative;
+            padding-left: 40px;
+            display: flex;
+            align-items: center;
+        }
+        .horizontal-view .jefe-item::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--color-blue);
+        }
+         .horizontal-view .jefe-item.support-role::before {
+           display: none;
+        }
+        .horizontal-view .ejecutivos-row {
+            padding-left: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 1rem;
+            align-items: stretch;
+            position: relative;
+            /* Se elimina el ancho fijo y se establece un máximo para permitir el ajuste automático */
+            width: 100%;
+            max-width: 630px; /* Aprox. 3 tarjetas de ancho */
+        }
+        
+        .horizontal-view .ejecutivos-row::before {
+             content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--color-blue);
+        }
+
+        /* --- Formas decorativas --- */
+        @keyframes float {
+            0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); }
+        }
+        .shape {
+            position: absolute; z-index: 0; opacity: 0.9; animation: float 8s ease-in-out infinite;
+        }
+        .shape-delay-1 { animation-delay: 2s; } .shape-delay-2 { animation-delay: 4s; }
+
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+
+    <div class="shape shape-delay-1" style="top: 8rem; right: 12rem; width: 4rem; height: 4rem; background-color: var(--color-blue); border-radius: 50%;"></div>
+    <div class="shape shape-delay-2" style="top: 15rem; right: 4rem; width: 8rem; height: 8rem; background-color: var(--color-yellow); border-radius: 50%;"></div>
+    <div class="shape" style="top: 0; right: 0; width: 8rem; height: 8rem; background-color: var(--color-yellow); clip-path: circle(100% at 100% 0);"></div>
+    <div class="shape shape-delay-1" style="top: 2rem; left: 2rem; width: 5rem; height: 10rem; background-color: var(--color-blue); clip-path: ellipse(50% 100% at 0% 50%); opacity:0.7"></div>
+
+    <header class="max-w-7xl mx-auto relative mb-8">
+        <div class="absolute top-0 right-0 z-20">
+            <img src="Logo AforeCoppel 1080x1080 (1).jpg" alt="Logo de la Empresa" class="h-12 sm:h-16" onerror="this.src='https://placehold.co/200x80/FFFFFF/002060?text=Logo'; this.onerror=null;">
+        </div>
+        <div class="text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-[var(--color-blue)]">Organigrama Interactivo</h1>
+            <p class="text-xl text-gray-600 mt-2">Gerencia de Atención al Público</p>
+        </div>
+    </header>
+
+    <!-- Controles Dinámicos -->
+    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row gap-4 justify-center items-center mb-8 p-4 bg-gray-50 rounded-lg shadow-sm z-20 relative">
+        <input type="text" id="search-box" placeholder="Buscar por nombre..." class="w-full sm:w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--color-yellow)] focus:border-[var(--color-blue)]">
+        <button id="view-toggle" class="px-4 py-2 bg-[var(--color-blue)] text-white font-semibold rounded-lg hover:bg-opacity-90 transition-colors">
+            Cambiar a Vista Horizontal
+        </button>
+    </div>
+
+    <!-- Contenedor del Organigrama -->
+    <div id="org-chart-container" class="overflow-x-auto pb-8 text-center vertical-view">
+        <!-- VISTA VERTICAL: El contenido se generará dinámicamente -->
+        <div id="vertical-view" class="tree inline-block min-w-full align-top">
+             <ul><!-- El contenido se insertará aquí vía JS --></ul>
+        </div>
+        <!-- VISTA HORIZONTAL: El contenido se generará dinámicamente -->
+        <div id="horizontal-view" class="tree-container hidden">
+            <!-- El contenido se insertará aquí vía JS -->
+        </div>
+    </div>
+    
+    <!-- Modals -->
+    <div id="zoomModal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center p-4 z-50">
+        <div id="modalContent" class="bg-white rounded-lg shadow-2xl p-6 relative max-w-sm w-full text-center">
+            <button id="closeModal" class="absolute -top-3 -right-3 text-white bg-red-500 rounded-full h-8 w-8 flex items-center justify-center text-lg font-bold hover:bg-red-700">&times;</button>
+        </div>
+    </div>
+    <div id="imageZoomModal" class="fixed inset-0 bg-black bg-opacity-80 hidden items-center justify-center p-4 z-50">
+        <button id="closeImageModal" class="absolute top-4 right-4 text-white text-4xl font-bold hover:text-gray-300">&times;</button>
+        <img id="zoomedImage" src="" alt="Vista ampliada" class="max-w-full max-h-[90vh] rounded-lg shadow-lg">
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // =================================================================================
+            // 1. FUENTE DE DATOS ÚNICA (JSON)
+            // =================================================================================
+            const orgData = {
+                id: 'kevin',
+                name: 'Kevin Zavala García',
+                role: 'Gerente de Atención al Público',
+                email: 'kevin.zavala@aforecoppel.com',
+                imgText: 'KZ',
+                level: 'manager',
+                img: 'kevin_zavala.webp',
+                children: [
+                    {
+                        id: 'irain',
+                        name: 'Irain Alonso Verdugo Avila',
+                        role: 'Jefe de Servicios',
+                        roleDetail: '(ATN CRM Módulo, MAO, Formulario Web)',
+                        email: 'irain.verdugo@aforecoppel.com',
+                        imgText: 'IV',
+                        level: 'chief',
+                        img: 'irain_verdugo.webp',
+                        children: [
+                            { id: 'gloria', name: 'Gloria Alejandra Sanchez Ibarra', role: 'Ejecutivo de Atención', roleDetail: 'CRM MAO Monitoreos MAO', email: 'gloria.sanchez@aforecoppel.com', imgText: 'GS', level: 'executive', img: 'gloria_sanchez.webp' },
+                            { id: 'diana', name: 'Diana Isbeth Vega Villa', role: 'Ejecutivo de Atención', roleDetail: 'CRM MAO Monitoreos MAO', email: 'diana.vega@aforecoppel.com', imgText: 'DV', level: 'executive', img: 'diana_vega.webp' },
+                            { id: 'maria', name: 'Maria De Los Angeles Leyva German', role: 'Ejecutivo de Atención', roleDetail: 'CRM MAO Monitoreos MAO', email: 'maria.leyva@aforecoppel.com', imgText: 'ML', level: 'executive', img: 'CSB_0193.jpg' },
+                            { id: 'vianney', name: 'Vianney Iracema Castillo Montano', role: 'Ejecutivo de Atención', roleDetail: 'CRM MAO & CRM Formulario Web', email: 'vianney.castillo@aforecoppel.com', imgText: 'VC', level: 'executive', img: 'vianney.jpg' },
+                            { id: 'carmen', name: 'Carmen Francisca Moreno Acosta', role: 'Ejecutivo de Atención', roleDetail: 'CRM Módulo Atención a consultas CRA', email: 'carmen.moreno@aforecoppel.com', imgText: 'CM', level: 'executive', img: 'carmen_moreno.webp' },
+                        ]
+                    },
+                    {
+                        id: 'sergio',
+                        name: 'Sergio Antonio Urieta Caro',
+                        role: 'Soporte de Jefes de Servicio',
+                        roleDetail: 'Seguimientos Especiales CRM',
+                        email: 'sergio.urieta@aforecoppel.com',
+                        imgText: 'SU',
+                        level: 'support',
+                        team: ['irain', 'misael'],
+                        img: 'sergio.jpg'
+                    },
+                    {
+                        id: 'misael',
+                        name: 'Jesus Misael Gutierrez Nuñez',
+                        role: 'Jefe de Servicios',
+                        roleDetail: '(Servicios CAT & ATN CRM CAT)',
+                        email: 'jesus.gutierrez@aforecoppel.com',
+                        imgText: 'JG',
+                        level: 'chief',
+                        img: 'jesus_gutierrez.webp',
+                        children: [
+                             { id: 'vacante-perla', name: 'Vacante', role: 'Ejecutivo de Atención', roleDetail: 'CRM CAT Datos CAT', level: 'executive', isVacant: true },
+                             { id: 'jesus', name: 'Jesús Keanu Canedo Soto', role: 'Ejecutivo de Atención', roleDetail: 'CRM CAT Diálogos y Capacitación CAT', email: 'jesus.canedo@aforecoppel.com', imgText: 'JC', level: 'executive', img: 'jesus_canedo.webp' },
+                             { id: 'dania', name: 'Dania Chávez', role: 'Ejecutivo de Atención', roleDetail: 'CRM CAT MPP y Capacitación CAT', email: 'dania.chavez@aforecoppel.com', imgText: 'DC', level: 'executive', img: 'dania_chavez.webp' },
+                             { id: 'domenika', name: 'Domenika Guadalupe Felix Castro', role: 'Ejecutivo de Atención', roleDetail: 'CRM CAT & Seguimiento al cumplimiento MPP', email: 'domenika.felix@aforecoppel.com', imgText: 'DF', level: 'executive', img: 'domenika_felix.webp' },
+                        ]
+                    }
+                ]
+            };
+
+
+            // =================================================================================
+            // 2. FUNCIONES PARA GENERAR HTML
+            // =================================================================================
+
+            function createCardHTML(person, viewType) {
+                const isVertical = viewType === 'vertical';
+                let dataAttrs = `data-name="${person.name.toLowerCase()}" ${person.email ? `data-email="${person.email}"` : ''}`;
+                if (person.level === 'chief') dataAttrs += ` data-chief="${person.id}"`;
+                if (person.level === 'executive') dataAttrs += ` data-team="${person.team}"`;
+                if (person.level === 'support') dataAttrs += ` data-team="${person.team.join(' ')}"`;
+                
+                let styles = {
+                    manager: { wrapper: 'p-4 border-t-8', img: 'w-20 h-20 border-4', title: 'text-lg', color: 'border-[var(--color-blue)]' },
+                    chief: { wrapper: 'p-3 border-t-4', img: 'w-16 h-16 border-2', title: 'text-md', color: 'border-[var(--color-blue)]' },
+                    executive: { wrapper: 'p-3 border-t-2', img: 'w-16 h-16 border-2', title: 'text-sm', color: 'border-[var(--color-yellow)]' },
+                    support: { wrapper: 'p-3 border-t-4', img: 'w-16 h-16 border-2', title: 'text-md', color: 'border-teal-500', titleColor: 'text-teal-800' },
+                };
+                
+                if (person.isVacant) {
+                    return `
+                        <div class="card-wrapper" data-name="vacante">
+                            <div class="card-content bg-white rounded-lg shadow-md p-3 border-t-4 border-[var(--color-blue)] cursor-pointer hover:shadow-xl hover:-translate-y-1">
+                                <div class="w-16 h-16 rounded-full mx-auto mb-2 bg-gray-200 flex items-center justify-center border-2 border-[var(--color-blue)]"><svg class="w-10 h-10 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg></div>
+                                <h3 class="font-bold text-md text-[var(--color-blue)]">${person.name}</h3>
+                                <p class="text-xs text-gray-500">${person.role}</p>
+                                ${person.roleDetail ? `<p class="text-xs font-semibold text-gray-700 mt-1">${person.roleDetail}</p>` : ''}
+                            </div>
+                        </div>`;
+                }
+
+                const s = styles[person.level] || styles.executive;
+                const imgColor = person.level === 'executive' ? 'FFD966/000000' : '002060/FFFFFF';
+                // Generar URL del placeholder como respaldo
+                const placeholderUrl = `https://placehold.co/${s.img.includes('20') ? '80x80' : '64x64'}/${person.level === 'support' ? '14B8A6/FFFFFF' : imgColor}?text=${person.imgText}`;
+                
+                // Usar imagen personalizada si existe, sino el placeholder
+                const imgUrl = person.img ? person.img : placeholderUrl;
+
+                return `
+                    <div class="card-wrapper" ${dataAttrs}>
+                        <div class="card-content bg-white rounded-lg shadow-lg ${s.wrapper} ${s.color} cursor-pointer hover:shadow-2xl hover:-translate-y-1">
+                            <img src="${imgUrl}" alt="Fotografía de perfil de ${person.name}" class="${s.img} rounded-full mx-auto mb-3 ${s.color} object-cover" onerror="this.src='${placeholderUrl}'; this.onerror=null;">
+                            <h3 class="font-bold ${s.title} ${s.titleColor || 'text-[var(--color-blue)]'}">${person.name}</h3>
+                            <p class="text-sm text-gray-600">${person.role}</p>
+                            ${isVertical && person.roleDetail ? `<p class="text-xs font-semibold text-gray-700 mt-1">${person.roleDetail}</p>` : ''}
+                        </div>
+                    </div>`;
+            }
+
+            function buildVerticalTree(person) {
+                let childrenHTML = '';
+                if (person.children && person.children.length > 0) {
+                    childrenHTML = `<ul>${person.children.map(child => buildVerticalTree(child)).join('')}</ul>`;
+                }
+                const liClass = person.level === 'support' ? 'class="support-role"' : '';
+                const liId = `id="li-${person.id}"`;
+                return `<li ${liId} ${liClass}>${createCardHTML(person, 'vertical')}${childrenHTML}</li>`;
+            }
+
+            function buildHorizontalView(data) {
+                const managerHTML = `<div class="gerente-col">${createCardHTML(data, 'horizontal')}</div>`;
+                
+                const teamsHTML = data.children.map(person => {
+                    const liClass = person.level === 'support' ? 'support-role' : '';
+                    let teamMembersHTML = '';
+
+                    if (person.children && person.children.length > 0) {
+                        person.children.forEach(member => member.team = person.id);
+                        const members = person.children.map(member => createCardHTML(member, 'horizontal')).join('');
+                        teamMembersHTML = `<div class="ejecutivos-row">${members}</div>`;
+                    }
+                    
+                    return `<div id="h-li-${person.id}" class="jefe-item ${liClass}">${createCardHTML(person, 'horizontal')}${teamMembersHTML}</div>`;
+                }).join('');
+
+                return `${managerHTML}<div class="jefes-col">${teamsHTML}</div>`;
+            }
+
+            // =================================================================================
+            // 3. RENDERIZADO Y DIBUJO DE LÍNEAS
+            // =================================================================================
+            const verticalContainer = document.querySelector('#vertical-view ul');
+            verticalContainer.innerHTML = buildVerticalTree(orgData);
+
+            const horizontalContainer = document.getElementById('horizontal-view');
+            horizontalContainer.innerHTML = buildHorizontalView(orgData);
+            
+            function findSupportRoles(data) {
+                return data.children ? data.children.filter(p => p.level === 'support') : [];
+            }
+
+            function drawVerticalSupportLine(sourceNode, targetNode, svg) {
+                 if (!sourceNode || !targetNode || !svg) return;
+
+                const sourceCard = sourceNode.querySelector('.card-wrapper');
+                const targetCard = targetNode.querySelector('.card-wrapper');
+                if (!sourceCard || !targetCard) return;
+
+                const sourceRect = sourceCard.getBoundingClientRect();
+                const targetRect = targetCard.getBoundingClientRect();
+                const containerRect = svg.parentElement.getBoundingClientRect();
+
+                const isTargetLeft = targetRect.left < sourceRect.left;
+                
+                const startY = sourceRect.top + sourceRect.height / 2 - containerRect.top;
+                const endY = targetRect.top + targetRect.height / 2 - containerRect.top;
+
+                const startX = isTargetLeft 
+                    ? sourceRect.left - containerRect.left 
+                    : sourceRect.right - containerRect.left;
+                
+                const endX = isTargetLeft 
+                    ? targetRect.right - containerRect.left 
+                    : targetRect.left - containerRect.left;
+
+                const pathData = `M ${startX} ${startY} L ${endX} ${endY}`;
+                
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', pathData);
+                path.setAttribute('stroke', 'var(--color-blue)');
+                path.setAttribute('stroke-width', '2');
+                path.setAttribute('fill', 'transparent');
+                path.setAttribute('stroke-dasharray', '5, 5');
+                svg.appendChild(path);
+            }
+
+            function setupVerticalSupportConnections() {
+                const container = document.querySelector('#vertical-view > ul');
+                if (!container) return;
+
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.style.position = 'absolute';
+                svg.style.top = '0';
+                svg.style.left = '0';
+                svg.style.width = '100%';
+                svg.style.height = '100%';
+                svg.style.pointerEvents = 'none';
+                svg.style.zIndex = '0';
+                container.style.position = 'relative';
+                container.appendChild(svg);
+                
+                const supportRoles = findSupportRoles(orgData);
+                supportRoles.forEach(person => {
+                    const sourceNode = document.getElementById(`li-${person.id}`);
+                    if (sourceNode && person.team) {
+                        person.team.forEach(targetId => {
+                            const targetNode = document.getElementById(`li-${targetId}`);
+                            drawVerticalSupportLine(sourceNode, targetNode, svg);
+                        });
+                    }
+                });
+            }
+
+            function drawHorizontalSupportLine(sourceNode, targetNode, svg) {
+                 if (!sourceNode || !targetNode || !svg) return;
+                const sourceCard = sourceNode.querySelector('.card-wrapper');
+                const targetCard = targetNode.querySelector('.card-wrapper');
+                if (!sourceCard || !targetCard) return;
+
+                const sourceRect = sourceCard.getBoundingClientRect();
+                const targetRect = targetCard.getBoundingClientRect();
+                const containerRect = svg.parentElement.getBoundingClientRect();
+
+                const startX = sourceRect.right - containerRect.left;
+                const startY = sourceRect.top + sourceRect.height / 2 - containerRect.top;
+                
+                const endX = targetRect.left - containerRect.left;
+                const endY = targetRect.top + targetRect.height / 2 - containerRect.top;
+                
+                const pathData = `M ${startX} ${startY} L ${endX} ${endY}`;
+                
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', pathData);
+                path.setAttribute('stroke', 'var(--color-blue)');
+                path.setAttribute('stroke-width', '2');
+                path.setAttribute('fill', 'transparent');
+                path.setAttribute('stroke-dasharray', '5, 5');
+                svg.appendChild(path);
+            }
+            
+            function setupHorizontalConnections() {
+                const container = document.getElementById('horizontal-view');
+                if (!container) return;
+
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.style.position = 'absolute';
+                svg.style.top = '0';
+                svg.style.left = '0';
+                svg.style.width = '100%';
+                svg.style.height = '100%';
+                svg.style.pointerEvents = 'none';
+                svg.style.zIndex = '0';
+                container.style.position = 'relative';
+                container.appendChild(svg);
+                
+                // Dibujar líneas de soporte primero
+                const supportRoles = findSupportRoles(orgData);
+                supportRoles.forEach(person => {
+                    const sourceNode = document.getElementById(`h-li-${person.id}`);
+                    if (sourceNode && person.team) {
+                        person.team.forEach(targetId => {
+                            const targetNode = document.getElementById(`h-li-${targetId}`);
+                            drawHorizontalSupportLine(sourceNode, targetNode, svg);
+                        });
+                    }
+                });
+            }
+
+            requestAnimationFrame(setupVerticalSupportConnections);
+
+            // =================================================================================
+            // 4. LÓGICA DE INTERACTIVIDAD
+            // =================================================================================
+            const searchBox = document.getElementById('search-box');
+            const viewToggle = document.getElementById('view-toggle');
+            const verticalView = document.getElementById('vertical-view');
+            
+            let allCards = document.querySelectorAll('.card-wrapper');
+            let chiefCards = document.querySelectorAll('[data-chief]');
+            
+            const zoomModal = document.getElementById('zoomModal');
+            const modalContent = document.getElementById('modalContent');
+            const closeModal = document.getElementById('closeModal');
+            const imageZoomModal = document.getElementById('imageZoomModal');
+            const zoomedImage = document.getElementById('zoomedImage');
+            const closeImageModal = document.getElementById('closeImageModal');
+            let horizontalLinesDrawn = false;
+
+            searchBox.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                allCards.forEach(cardWrapper => {
+                    cardWrapper.classList.remove('highlight-search', 'dimmed');
+                    const cardName = cardWrapper.dataset.name ? cardWrapper.dataset.name.toLowerCase() : '';
+                    if (searchTerm.length > 0) {
+                        if (cardName.includes(searchTerm)) {
+                            cardWrapper.classList.add('highlight-search');
+                        } else {
+                            cardWrapper.classList.add('dimmed');
+                        }
+                    }
+                });
+            });
+
+            function setupTeamHighlighting() {
+                chiefCards = document.querySelectorAll('[data-chief]');
+                allCards.forEach(card => card.classList.remove('dimmed'));
+
+                chiefCards.forEach(chiefCard => {
+                    chiefCard.addEventListener('mouseenter', () => {
+                        if (searchBox.value.length > 0) return; 
+                        const teamId = chiefCard.dataset.chief;
+                        allCards.forEach(card => {
+                            const cardTeams = card.dataset.team || '';
+                            if (card.dataset.chief !== teamId && !cardTeams.includes(teamId)) {
+                                card.classList.add('dimmed');
+                            }
+                        });
+                    });
+                    chiefCard.addEventListener('mouseleave', () => {
+                        if (searchBox.value.length > 0) return;
+                        allCards.forEach(card => card.classList.remove('dimmed'));
+                    });
+                });
+            }
+            
+            viewToggle.addEventListener('click', () => {
+                const isVertical = !verticalView.classList.contains('hidden');
+                if (isVertical) {
+                    verticalView.classList.add('hidden');
+                    horizontalContainer.classList.remove('hidden');
+                    viewToggle.textContent = 'Cambiar a Vista Vertical';
+                    document.getElementById('org-chart-container').classList.add('horizontal-view');
+                    document.getElementById('org-chart-container').classList.remove('vertical-view');
+                     if (!horizontalLinesDrawn) {
+                        requestAnimationFrame(() => {
+                           setupHorizontalConnections();
+                           horizontalLinesDrawn = true;
+                        });
+                    }
+                } else {
+                    horizontalContainer.classList.add('hidden');
+                    verticalView.classList.remove('hidden');
+                    viewToggle.textContent = 'Cambiar a Vista Horizontal';
+                    document.getElementById('org-chart-container').classList.add('vertical-view');
+                    document.getElementById('org-chart-container').classList.remove('horizontal-view');
+                }
+            });
+
+            function setupModals() {
+                allCards = document.querySelectorAll('.card-wrapper');
+                allCards.forEach(cardWrapper => {
+                    const cardContent = cardWrapper.querySelector('.card-content');
+                    if (!cardContent) return;
+                    
+                    const img = cardWrapper.querySelector('img');
+
+                    cardContent.addEventListener('click', () => {
+                        while (modalContent.lastChild && modalContent.lastChild.id !== 'closeModal') {
+                           modalContent.removeChild(modalContent.lastChild);
+                        }
+                        
+                        const newContent = cardContent.cloneNode(true);
+                        newContent.classList.add('card-clone');
+                        newContent.classList.remove('cursor-pointer', 'hover:shadow-2xl', 'hover:-translate-y-1', 'hover:shadow-xl', 'hover:shadow-lg', 'h-full');
+                        
+                        const imgClone = newContent.querySelector('img');
+                        if (imgClone) {
+                            imgClone.classList.remove('w-16','w-20','h-16','h-20');
+                            imgClone.classList.add('w-24', 'h-24');
+                        }
+                        
+                        modalContent.appendChild(newContent);
+                        
+                        const email = cardWrapper.dataset.email;
+                        if(email){
+                            const contactInfo = document.createElement('div');
+                            contactInfo.classList.add('mt-4','pt-4','border-t','text-left','text-sm', 'space-y-3');
+                            contactInfo.innerHTML = `
+                                <p class="flex items-center text-gray-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25-2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" /></svg>
+                                    <a href="mailto:${email}" class="hover:underline">${email}</a>
+                                </p>
+                                <a href="https://teams.microsoft.com/l/chat/0/0?users=${email}" target="_blank" rel="noopener noreferrer" class="w-full flex items-center justify-center px-3 py-2 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M21.92,6.58A1,1,0,0,0,21,6H16.5A1.5,1.5,0,0,0,15,7.5V12H13V7.5A1.5,1.5,0,0,0,11.5,6H7A1,1,0,0,0,6,7V17a1,1,0,0,0,1,1h.5a1.5,1.5,0,0,0,1.5-1.5V12h2v4.5A1.5,1.5,0,0,0,13.5,18H18a1,1,0,0,0,1-1V9.42l2.92,2.92A1,1,0,0,0,22.62,11.62Z"></path><path d="M4,6A2,2,0,1,0,6,8,2,2,0,0,0,4,6Z"></path><path d="M11,10.5A2.5,2.5,0,1,0,13.5,13,2.5,2.5,0,0,0,11,10.5Z"></path><path d="M19,10a2,2,0,1,0,2,2,2,2,0,0,0-2-2Z"></path></svg>
+                                    Iniciar Chat en Teams
+                                </a>
+                                `;
+                            modalContent.appendChild(contactInfo);
+                        }
+
+                        zoomModal.classList.remove('hidden');
+                        zoomModal.classList.add('flex');
+                    });
+
+                    if (img) {
+                        img.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            if (e.target.src.includes('placehold.co')) return;
+                            zoomedImage.src = e.target.src;
+                            imageZoomModal.classList.remove('hidden');
+                            imageZoomModal.classList.add('flex');
+                        });
+                    }
+                });
+            }
+            
+            setupTeamHighlighting();
+            setupModals();
+
+            const hideCardModal = () => {
+                zoomModal.classList.add('hidden');
+                zoomModal.classList.remove('flex');
+            }
+            const hideImageModal = () => {
+                imageZoomModal.classList.add('hidden');
+                imageZoomModal.classList.remove('flex');
+            }
+
+            closeModal.addEventListener('click', hideCardModal);
+            closeImageModal.addEventListener('click', hideImageModal);
+            zoomModal.addEventListener('click', e => { if (e.target === zoomModal) hideCardModal(); });
+            imageZoomModal.addEventListener('click', e => { if (e.target === imageZoomModal) hideImageModal(); });
+        });
+    </script>
+</body>
+</html>
