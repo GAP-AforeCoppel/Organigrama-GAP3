@@ -214,8 +214,7 @@
 
     <header class="max-w-7xl mx-auto relative mb-8">
         <div class="absolute top-0 right-0 z-20">
-            <!-- NOTA: Asegúrate de que este archivo también exista en tu GitHub -->
-            <img src="Logo AforeCoppel 1080x1080 (1).jpg" alt="Logo de la Empresa" class="h-12 sm:h-16" onerror="this.src='https://placehold.co/200x80/FFFFFF/002060?text=Logo'; this.onerror=null;">
+            <img src="https://placehold.co/200x80/FFFFFF/002060?text=Logo" alt="Logo de la Empresa" class="h-12 sm:h-16">
         </div>
         <div class="text-center">
             <h1 class="text-3xl md:text-4xl font-bold text-[var(--color-blue)]">Organigrama Interactivo</h1>
@@ -267,7 +266,6 @@
                 email: 'kevin.zavala@aforecoppel.com',
                 imgText: 'KZ',
                 level: 'manager',
-                img: 'kevin_zavala.webp',
                 children: [
                     {
                         id: 'irain',
@@ -277,13 +275,12 @@
                         email: 'irain.verdugo@aforecoppel.com',
                         imgText: 'IV',
                         level: 'chief',
-                        img: 'irain_verdugo.webp',
                         children: [
-                            { id: 'gloria', name: 'Gloria Alejandra Sanchez Ibarra', role: 'Ejecutivo de Atención', roleDetail: 'CRM MAO Monitoreos MAO', email: 'gloria.sanchez@aforecoppel.com', imgText: 'GS', level: 'executive', img: 'gloria_sanchez.webp' },
-                            { id: 'diana', name: 'Diana Isbeth Vega Villa', role: 'Ejecutivo de Atención', roleDetail: 'CRM MAO Monitoreos MAO', email: 'diana.vega@aforecoppel.com', imgText: 'DV', level: 'executive', img: 'diana_vega.webp' },
-                            { id: 'maria', name: 'Maria De Los Angeles Leyva German', role: 'Ejecutivo de Atención', roleDetail: 'CRM MAO Monitoreos MAO', email: 'maria.leyva@aforecoppel.com', imgText: 'ML', level: 'executive', img: 'CSB_0193.jpg' },
-                            { id: 'vianney', name: 'Vianney Iracema Castillo Montano', role: 'Ejecutivo de Atención', roleDetail: 'CRM MAO & CRM Formulario Web', email: 'vianney.castillo@aforecoppel.com', imgText: 'VC', level: 'executive', img: 'vianney_castillo.webp' },
-                            { id: 'carmen', name: 'Carmen Francisca Moreno Acosta', role: 'Ejecutivo de Atención', roleDetail: 'CRM Módulo Atención a consultas CRA', email: 'carmen.moreno@aforecoppel.com', imgText: 'CM', level: 'executive', img: 'carmen_moreno.webp' },
+                            { id: 'gloria', name: 'Gloria Alejandra Sanchez Ibarra', role: 'Ejecutivo de Atención', roleDetail: 'CRM MAO Monitoreos MAO', email: 'gloria.sanchez@aforecoppel.com', imgText: 'GS', level: 'executive' },
+                            { id: 'diana', name: 'Diana Isbeth Vega Villa', role: 'Ejecutivo de Atención', roleDetail: 'CRM MAO Monitoreos MAO, Formulario Web', email: 'diana.vega@aforecoppel.com', imgText: 'DV', level: 'executive' },
+                            { id: 'maria', name: 'Maria De Los Angeles Leyva German', role: 'Ejecutivo de Atención', roleDetail: 'CRM MAO Monitoreos MAO, Atención CRAs', email: 'maria.leyva@aforecoppel.com', imgText: 'ML', level: 'executive' },
+                            { id: 'vianney', name: 'Vianney Iracema Castillo Montano', role: 'Ejecutivo de Atención', roleDetail: 'CRM Módulo Atención, Quejas', email: 'vianney.castillo@aforecoppel.com', imgText: 'VC', level: 'executive' },
+                            { id: 'carmen', name: 'Vacante', role: 'Ejecutivo de Atención', roleDetail: 'CRM MAO Monitoreos MAO', level: 'executive', isVacant: true },
                         ]
                     },
                     {
@@ -294,8 +291,7 @@
                         email: 'sergio.urieta@aforecoppel.com',
                         imgText: 'SU',
                         level: 'support',
-                        team: ['irain', 'misael'],
-                        img: 'sergio_urieta.webp' 
+                        team: ['irain', 'misael']
                     },
                     {
                         id: 'misael',
@@ -305,12 +301,11 @@
                         email: 'jesus.gutierrez@aforecoppel.com',
                         imgText: 'JG',
                         level: 'chief',
-                        img: 'jesus_gutierrez.webp',
                         children: [
-                             { id: 'vacante-perla', name: 'Vacante', role: 'Ejecutivo de Atención', roleDetail: 'CRM CAT Datos CAT', level: 'executive', isVacant: true },
-                             { id: 'jesus', name: 'Jesús Keanu Canedo Soto', role: 'Ejecutivo de Atención', roleDetail: 'CRM CAT Diálogos y Capacitación CAT', email: 'jesus.canedo@aforecoppel.com', imgText: 'JC', level: 'executive', img: 'jesus_canedo.webp' },
-                             { id: 'dania', name: 'Dania Chávez', role: 'Ejecutivo de Atención', roleDetail: 'CRM CAT MPP y Capacitación CAT', email: 'dania.chavez@aforecoppel.com', imgText: 'DC', level: 'executive', img: 'dania_chavez.webp' },
-                             { id: 'domenika', name: 'Domenika Guadalupe Felix Castro', role: 'Ejecutivo de Atención', roleDetail: 'CRM CAT & Seguimiento al cumplimiento MPP', email: 'domenika.felix@aforecoppel.com', imgText: 'DF', level: 'executive', img: 'domenika_felix.webp' },
+                             { id: 'jesus-noe', name: 'Jesús Noe Pinedo Beltrán', role: 'Ejecutivo de Atención', roleDetail: 'CRM CAT Datos CAT', email: 'jesus.pinedo@aforecoppel.com', imgText: 'JP', level: 'executive', image: 'noe_pinedo.jpg' },
+                             { id: 'jesus', name: 'Jesús Keanu Canedo Soto', role: 'Ejecutivo de Atención', roleDetail: 'CRM CAT Diálogos y Capacitación CAT', email: 'jesus.canedo@aforecoppel.com', imgText: 'JC', level: 'executive' },
+                             { id: 'dania', name: 'Dania Chávez', role: 'Ejecutivo de Atención', roleDetail: 'CRM CAT MPP y Capacitación CAT', email: 'dania.chavez@aforecoppel.com', imgText: 'DC', level: 'executive' },
+                             { id: 'domenika', name: 'Domenika Guadalupe Felix Castro', role: 'Ejecutivo de Atención', roleDetail: 'CRM CAT & Seguimiento al cumplimiento MPP', email: 'domenika.felix@aforecoppel.com', imgText: 'DF', level: 'executive' },
                         ]
                     }
                 ]
@@ -349,16 +344,13 @@
 
                 const s = styles[person.level] || styles.executive;
                 const imgColor = person.level === 'executive' ? 'FFD966/000000' : '002060/FFFFFF';
-                // Generar URL del placeholder como respaldo
                 const placeholderUrl = `https://placehold.co/${s.img.includes('20') ? '80x80' : '64x64'}/${person.level === 'support' ? '14B8A6/FFFFFF' : imgColor}?text=${person.imgText}`;
-                
-                // Usar imagen personalizada si existe, sino el placeholder
-                const imgUrl = person.img ? person.img : placeholderUrl;
+                const finalImgUrl = person.image ? person.image : placeholderUrl;
 
                 return `
                     <div class="card-wrapper" ${dataAttrs}>
                         <div class="card-content bg-white rounded-lg shadow-lg ${s.wrapper} ${s.color} cursor-pointer hover:shadow-2xl hover:-translate-y-1">
-                            <img src="${imgUrl}" alt="Fotografía de perfil de ${person.name}" class="${s.img} rounded-full mx-auto mb-3 ${s.color} object-cover" onerror="this.src='${placeholderUrl}'; this.onerror=null;">
+                            <img src="${finalImgUrl}" alt="Fotografía de perfil de ${person.name}" class="${s.img} rounded-full mx-auto mb-3 object-cover ${s.color}" onerror="this.src='${placeholderUrl}'; this.onerror=null;">
                             <h3 class="font-bold ${s.title} ${s.titleColor || 'text-[var(--color-blue)]'}">${person.name}</h3>
                             <p class="text-sm text-gray-600">${person.role}</p>
                             ${isVertical && person.roleDetail ? `<p class="text-xs font-semibold text-gray-700 mt-1">${person.roleDetail}</p>` : ''}
