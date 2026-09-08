@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organigrama  - Gerencia de Atención al Público</title>
+    <title>Organigrama - Gerencia de Atención al Público</title>
     <!-- Incluyendo Tailwind CSS para un diseño moderno y responsivo -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Incluyendo Google Fonts para una tipografía más agradable -->
@@ -129,26 +129,43 @@
              content: ''; position: absolute; top: 50%; left: 0; width: 40px; height: 2px; background-color: var(--color-blue);
         }
 
-        /* --- Formas decorativas --- */
+        /* --- Formas decorativas (NUEVOS CÍRCULOS AÑADIDOS) --- */
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
-        .shape { position: absolute; z-index: 0; opacity: 0.9; animation: float 8s ease-in-out infinite; }
-        .shape-delay-1 { animation-delay: 2s; } .shape-delay-2 { animation-delay: 4s; }
+        .shape { position: absolute; opacity: 0.9; animation: float 8s ease-in-out infinite; pointer-events: none; }
+        
+        /* Tiempos de retardo para que no se muevan todos al mismo tiempo */
+        .shape-delay-1 { animation-delay: 2s; } 
+        .shape-delay-2 { animation-delay: 4s; }
+        .shape-delay-3 { animation-delay: 1s; }
+        .shape-delay-4 { animation-delay: 3s; }
+        .shape-delay-5 { animation-delay: 5s; }
     </style>
 </head>
 <body class="p-4 sm:p-8 relative">
 
-    <div class="shape shape-delay-1" style="top: 8rem; right: 12rem; width: 4rem; height: 4rem; background-color: var(--color-blue); border-radius: 50%;"></div>
-    <div class="shape shape-delay-2" style="top: 15rem; right: 4rem; width: 8rem; height: 8rem; background-color: var(--color-yellow); border-radius: 50%;"></div>
-    <div class="shape" style="top: 0; right: 0; width: 8rem; height: 8rem; background-color: var(--color-yellow); clip-path: circle(100% at 100% 0);"></div>
-    <div class="shape shape-delay-1" style="top: 2rem; left: 2rem; width: 5rem; height: 10rem; background-color: var(--color-blue); clip-path: ellipse(50% 100% at 0% 50%); opacity:0.7"></div>
+    <!-- FORMAS FLOTANTES ORIGINALES -->
+    <div class="shape shape-delay-1" style="top: 8rem; right: 12rem; width: 4rem; height: 4rem; background-color: var(--color-blue); border-radius: 50%; z-index: 0;"></div>
+    <div class="shape shape-delay-2" style="top: 15rem; right: 4rem; width: 8rem; height: 8rem; background-color: var(--color-yellow); border-radius: 50%; z-index: 0;"></div>
+    <div class="shape" style="top: 0; right: 0; width: 8rem; height: 8rem; background-color: var(--color-yellow); clip-path: circle(100% at 100% 0); z-index: 0;"></div>
+    <div class="shape shape-delay-1" style="top: 2rem; left: 2rem; width: 5rem; height: 10rem; background-color: var(--color-blue); clip-path: ellipse(50% 100% at 0% 50%); opacity:0.7; z-index: 0;"></div>
 
-    <!-- CABECERA CON EL LOGO GIGANTE Y CENTRADO -->
-    <header class="max-w-7xl mx-auto relative mb-12 mt-4 flex flex-col items-center justify-center gap-6 z-20">
-        <div>
-            <img src="Logo AforeCoppel 1080x1080 (1).jpg" alt="Logo de la Empresa" class="h-32 sm:h-40 md:h-48 object-contain rounded-2xl shadow-lg bg-white p-2 border border-gray-100">
+    <!-- NUEVOS CÍRCULOS FLOTANTES AÑADIDOS -->
+    <div class="shape shape-delay-3" style="position: fixed; top: 40%; left: 5%; width: 6rem; height: 6rem; background-color: var(--color-yellow); border-radius: 50%; opacity: 0.5; z-index: -1;"></div>
+    <div class="shape shape-delay-4" style="position: fixed; bottom: 15%; right: 10%; width: 4rem; height: 4rem; background-color: var(--color-blue); border-radius: 50%; opacity: 0.6; z-index: -1;"></div>
+    <div class="shape shape-delay-5" style="position: fixed; top: 60%; left: 15%; width: 3rem; height: 3rem; background-color: var(--color-blue); border-radius: 50%; opacity: 0.7; z-index: -1;"></div>
+    <div class="shape shape-delay-1" style="position: fixed; bottom: 5%; left: 30%; width: 8rem; height: 8rem; background-color: var(--color-yellow); border-radius: 50%; opacity: 0.4; z-index: -1;"></div>
+    <div class="shape shape-delay-2" style="position: fixed; top: 20%; right: 25%; width: 5rem; height: 5rem; background-color: var(--color-yellow); border-radius: 50%; opacity: 0.5; z-index: -1;"></div>
+
+    <!-- CABECERA CON LOGO A LA DERECHA Y GRANDE -->
+    <header class="max-w-7xl mx-auto relative mb-12 mt-4 z-20">
+        <!-- Logo flotante en la esquina superior derecha -->
+        <div class="absolute -top-4 right-0 sm:right-4 z-30">
+            <img src="Logo AforeCoppel 1080x1080 (1).jpg" alt="Logo de la Empresa" class="h-28 sm:h-36 md:h-44 object-contain rounded-2xl shadow-lg bg-white p-2 border border-gray-100">
         </div>
-        <div class="text-center">
-            <h1 class="text-3xl md:text-5xl font-bold text-[var(--color-blue)] tracking-tight">Organigrama Interactivo</h1>
+        
+        <!-- Textos centrados -->
+        <div class="text-center pt-8 md:pt-12">
+            <h1 class="text-3xl md:text-5xl font-bold text-[var(--color-blue)] tracking-tight">Organigrama</h1>
             <p class="text-xl md:text-2xl text-gray-600 mt-2 font-medium">Gerencia de Atención al Público</p>
         </div>
     </header>
