@@ -48,7 +48,6 @@
             box-shadow: 0 0 0 4px var(--color-yellow);
         }
 
-
         /* --- VISTA VERTICAL: ESTILO DE LÍNEAS --- */
         .vertical-view .tree ul {
             position: relative;
@@ -116,7 +115,6 @@
         .vertical-view .tree li.support-role::after {
             background-color: var(--color-blue);
         }
-
 
         /* --- VISTA HORIZONTAL --- */
         .horizontal-view .tree-container {
@@ -260,13 +258,13 @@
             // 1. FUENTE DE DATOS ÚNICA (JSON)
             // =================================================================================
             const orgData = {
-                id: 'kevin',
-                name: 'Kevin Zavala García',
+                id: 'miguel',
+                name: 'Miguel Angel Garcia',
                 role: 'Gerente de Atención al Público',
-                email: 'kevin.zavala@aforecoppel.com',
-                imgText: 'KZ',
+                email: 'miguel.garcia@aforecoppel.com',
+                imgText: 'MG',
                 level: 'manager',
-                image: 'kevin_zavala.webp',
+                image: 'miguel_foto.jpg', // <-- AQUÍ SE AGREGA LA FOTO DE MIGUEL
                 children: [
                     {
                         id: 'irain',
@@ -278,11 +276,10 @@
                         level: 'chief',
                         image: 'irain_verdugo.webp',
                         children: [
-                            { id: 'gloria', name: 'Gloria Alejandra Sanchez Ibarra', role: 'Ejecutivo de Atención', roleDetail: 'CRM MAO Monitoreos MAO', email: 'gloria.sanchez@aforecoppel.com', imgText: 'GS', level: 'executive', image: 'gloria_sanchez.webp' },
+                            { id: 'gloria', name: 'Gloria Alejandra Sanchez Ibarra', role: 'Ejecutivo de Atención', roleDetail: 'CRM MAO Monitoreos MAO, CRM Módulo Atención', email: 'gloria.sanchez@aforecoppel.com', imgText: 'GS', level: 'executive', image: 'gloria_sanchez.webp' },
                             { id: 'diana', name: 'Diana Isbeth Vega Villa', role: 'Ejecutivo de Atención', roleDetail: 'CRM MAO Monitoreos MAO, Formulario Web', email: 'diana.vega@aforecoppel.com', imgText: 'DV', level: 'executive', image: 'diana_vega.webp' },
                             { id: 'maria', name: 'Maria De Los Angeles Leyva German', role: 'Ejecutivo de Atención', roleDetail: 'CRM MAO Monitoreos MAO, Atención CRAs', email: 'maria.leyva@aforecoppel.com', imgText: 'ML', level: 'executive', image: 'maria_leyva.jpg' },
                             { id: 'vianney', name: 'Vianney Iracema Castillo Montano', role: 'Ejecutivo de Atención', roleDetail: 'CRM Módulo Atención, Quejas', email: 'vianney.castillo@aforecoppel.com', imgText: 'VC', level: 'executive', image: 'vianney_castillo.webp' },
-                            { id: 'carmen', name: 'Vacante', role: 'Ejecutivo de Atención', roleDetail: 'CRM MAO Monitoreos MAO', level: 'executive', isVacant: true },
                         ]
                     },
                     {
@@ -307,14 +304,13 @@
                         image: 'jesus_gutierrez.webp',
                         children: [
                              { id: 'jesus-noe', name: 'Jesús Noe Pinedo Beltrán', role: 'Ejecutivo de Atención', roleDetail: 'CRM CAT Datos CAT', email: 'jesus.pinedo@aforecoppel.com', imgText: 'JP', level: 'executive', image: 'noe_pinedo.jpg' },
-                             { id: 'jesus', name: 'Jesús Keanu Canedo Soto', role: 'Ejecutivo de Atención', roleDetail: 'CRM CAT Diálogos y Capacitación CAT', email: 'jesus.canedo@aforecoppel.com', imgText: 'JC', level: 'executive', image: 'jesus_canedo.webp' },
+                             { id: 'isabel', name: 'Isabel Guadalupe Salazar', role: 'Ejecutivo de Atención', roleDetail: 'CRM CAT Diálogos y Capacitación CAT', email: 'isabel.salazar@aforecoppel.com', imgText: 'IS', level: 'executive', image: 'isabel_foto.jpg' }, // <-- AQUÍ SE AGREGA LA FOTO DE ISABEL
                              { id: 'dania', name: 'Dania Chávez', role: 'Ejecutivo de Atención', roleDetail: 'CRM CAT MPP y Capacitación CAT', email: 'dania.chavez@aforecoppel.com', imgText: 'DC', level: 'executive', image: 'dania_chavez.webp' },
                              { id: 'domenika', name: 'Domenika Guadalupe Felix Castro', role: 'Ejecutivo de Atención', roleDetail: 'CRM CAT & Seguimiento al cumplimiento MPP', email: 'domenika.felix@aforecoppel.com', imgText: 'DF', level: 'executive', image: 'domenika_felix.webp' },
                         ]
                     }
                 ]
             };
-
 
             // =================================================================================
             // 2. FUNCIONES PARA GENERAR HTML
