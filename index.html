@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organigrama - Gerencia de Atención al Público</title>
+    <title>Organigrama  - Gerencia de Atención al Público</title>
     <!-- Incluyendo Tailwind CSS para un diseño moderno y responsivo -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Incluyendo Google Fonts para una tipografía más agradable -->
@@ -19,222 +19,153 @@
         }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f9fafb; /* Un gris muy claro para suavizar el fondo */
+            background-color: #f9fafb;
             position: relative;
             overflow-x: hidden;
         }
 
+        /* --- CORRECCIÓN DE TAMAÑOS Y ALINEACIÓN DE TARJETAS --- */
         .card-wrapper {
             transition: all 0.3s ease;
             position: relative;
             z-index: 10;
         }
+        
         .card-content {
-             min-width: 190px;
+            width: 250px; /* TAMAÑO FIJO E IDÉNTICO PARA TODAS LAS TARJETAS */
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-sizing: border-box;
+            background-color: #ffffff;
         }
-        .card-content img { cursor: zoom-in; }
+        
+        .card-content img { cursor: zoom-in; margin-bottom: 0.75rem; }
         .card-content img[src*="placehold.co"] { cursor: default; }
 
         /* --- Estilos de Interacción --- */
-        .card-wrapper.dimmed {
-            opacity: 0.3;
-            transform: scale(0.95);
-        }
-        .card-wrapper.highlight-search {
-            opacity: 1;
-            transform: scale(1.05);
-        }
-        .card-wrapper.highlight-search .card-content {
-            box-shadow: 0 0 0 4px var(--color-yellow);
+        .card-wrapper.dimmed { opacity: 0.3; transform: scale(0.95); }
+        .card-wrapper.highlight-search { opacity: 1; transform: scale(1.05); }
+        .card-wrapper.highlight-search .card-content { box-shadow: 0 0 0 4px var(--color-yellow); }
+
+        /* --- VISTA VERTICAL: CENTRADO PERFECTO SIN DEFORMARSE --- */
+        #org-chart-container {
+            width: 100%;
+            overflow-x: auto; /* Permite scroll si la pantalla es pequeña */
+            text-align: center; /* Centra el bloque entero dentro de la pantalla */
         }
 
-        /* --- VISTA VERTICAL: ESTILO DE LÍNEAS --- */
+        #vertical-view {
+            display: inline-block; /* Se comporta como texto para poder ser centrado */
+            min-width: max-content; /* ESTO EVITA QUE SE APLASTE O DESCUADRE EN PANTALLAS CHICAS */
+            padding: 0 40px;
+            margin: 0 auto;
+        }
+
         .vertical-view .tree ul {
             position: relative;
-            padding-top: 50px; /* Espacio para la línea superior */
+            padding-top: 50px; 
             display: flex;
             justify-content: center;
+            align-items: flex-start; /* ESTO EVITA QUE LAS TARJETAS SE VUELVAN GIGANTES HACIA ABAJO */
         }
         
         .vertical-view .tree li {
             display: flex;
             flex-direction: column;
             align-items: center;
-            text-align: center;
             position: relative;
-            padding: 0 10px; /* Espacio horizontal entre tarjetas */
+            padding: 0 15px; /* Espacio horizontal uniforme */
         }
         
-        /* Conector vertical que sube de la tarjeta al conector horizontal */
+        /* Conectores Verticales y Horizontales (Líneas) */
         .vertical-view .tree li::before {
-            content: '';
-            position: absolute;
-            top: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 2px;
-            height: 25px;
-            background-color: var(--color-blue);
+            content: ''; position: absolute; top: -25px; left: 50%; transform: translateX(-50%);
+            width: 2px; height: 25px; background-color: var(--color-blue);
         }
-        
-        /* Conector horizontal que une a los hermanos */
         .vertical-view .tree li::after {
-            content: '';
-            position: absolute;
-            top: -25px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: var(--color-blue);
+            content: ''; position: absolute; top: -25px; left: 0; width: 100%; height: 2px; background-color: var(--color-blue);
         }
-
-        /* Ocultar conectores donde no son necesarios */
         .vertical-view .tree > ul > li::before, .vertical-view .tree > ul > li::after { display: none; }
         .vertical-view .tree li:only-child::after { display: none; }
         .vertical-view .tree li:first-child::after { left: 50%; width: 50%; }
         .vertical-view .tree li:last-child::after { left: 0; width: 50%; }
-        
-        /* Conector vertical que baja de un padre (si tiene hijos) */
         .vertical-view .tree li:has(> ul) > .card-wrapper::after {
-            content: '';
-            position: absolute;
-            bottom: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 2px;
-            height: 25px;
-            background-color: var(--color-blue);
+            content: ''; position: absolute; bottom: -25px; left: 50%; transform: translateX(-50%);
+            width: 2px; height: 25px; background-color: var(--color-blue);
         }
         
-        /* --- AJUSTES PARA ROLES DE SOPORTE --- */
-        /* Oculta el conector vertical para el rol de soporte. */
-        .vertical-view .tree li.support-role::before {
-            display: none;
-        }
-        /* Restaura el conector horizontal para que la línea no se corte. */
-        .vertical-view .tree li.support-role::after {
-            background-color: var(--color-blue);
-        }
+        /* --- AJUSTES PARA ROL DE SOPORTE (Sergio) --- */
+        .vertical-view .tree li.support-role::before { display: none; }
+        .vertical-view .tree li.support-role::after { background-color: var(--color-blue); }
 
         /* --- VISTA HORIZONTAL --- */
         .horizontal-view .tree-container {
-            display: flex;
-            align-items: center;
-            padding: 2rem;
-            min-width: 1800px;
+            display: inline-flex; align-items: center; padding: 2rem; min-width: max-content;
         }
-        .horizontal-view .gerente-col {
-            position: relative;
-            padding-right: 80px;
-        }
+        .horizontal-view .gerente-col { position: relative; padding-right: 80px; }
         .horizontal-view .gerente-col::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            right: 0;
-            width: 40px;
-            height: 2px;
-            background-color: var(--color-blue);
+            content: ''; position: absolute; top: 50%; right: 0; width: 40px; height: 2px; background-color: var(--color-blue);
         }
         .horizontal-view .jefes-col {
-            position: relative;
-            padding-left: 40px;
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
+            position: relative; padding-left: 40px; display: flex; flex-direction: column; gap: 2rem;
         }
         .horizontal-view .jefes-col::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 2px;
-            height: 100%;
-            background-color: var(--color-blue);
+            content: ''; position: absolute; top: 0; left: 0; width: 2px; height: 100%; background-color: var(--color-blue);
         }
         .horizontal-view .jefe-item {
-            position: relative;
-            padding-left: 40px;
-            display: flex;
-            align-items: center;
+            position: relative; padding-left: 40px; display: flex; align-items: center;
         }
         .horizontal-view .jefe-item::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 40px;
-            height: 2px;
-            background-color: var(--color-blue);
+            content: ''; position: absolute; top: 50%; left: 0; width: 40px; height: 2px; background-color: var(--color-blue);
         }
-         .horizontal-view .jefe-item.support-role::before {
-           display: none;
-        }
+         .horizontal-view .jefe-item.support-role::before { display: none; }
         .horizontal-view .ejecutivos-row {
-            padding-left: 40px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-            gap: 1rem;
-            align-items: stretch;
-            position: relative;
-            /* Se elimina el ancho fijo y se establece un máximo para permitir el ajuste automático */
-            width: 100%;
-            max-width: 630px; /* Aprox. 3 tarjetas de ancho */
+            padding-left: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; position: relative; width: 100%; max-width: 850px;
         }
-        
         .horizontal-view .ejecutivos-row::before {
-             content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 40px;
-            height: 2px;
-            background-color: var(--color-blue);
+             content: ''; position: absolute; top: 50%; left: 0; width: 40px; height: 2px; background-color: var(--color-blue);
         }
 
         /* --- Formas decorativas --- */
-        @keyframes float {
-            0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); }
-        }
-        .shape {
-            position: absolute; z-index: 0; opacity: 0.9; animation: float 8s ease-in-out infinite;
-        }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
+        .shape { position: absolute; z-index: 0; opacity: 0.9; animation: float 8s ease-in-out infinite; }
         .shape-delay-1 { animation-delay: 2s; } .shape-delay-2 { animation-delay: 4s; }
-
     </style>
 </head>
-<body class="p-4 sm:p-8">
+<body class="p-4 sm:p-8 relative">
 
     <div class="shape shape-delay-1" style="top: 8rem; right: 12rem; width: 4rem; height: 4rem; background-color: var(--color-blue); border-radius: 50%;"></div>
     <div class="shape shape-delay-2" style="top: 15rem; right: 4rem; width: 8rem; height: 8rem; background-color: var(--color-yellow); border-radius: 50%;"></div>
     <div class="shape" style="top: 0; right: 0; width: 8rem; height: 8rem; background-color: var(--color-yellow); clip-path: circle(100% at 100% 0);"></div>
     <div class="shape shape-delay-1" style="top: 2rem; left: 2rem; width: 5rem; height: 10rem; background-color: var(--color-blue); clip-path: ellipse(50% 100% at 0% 50%); opacity:0.7"></div>
 
-    <header class="max-w-7xl mx-auto relative mb-8">
-        <div class="absolute top-0 right-0 z-20">
-            <img src="Logo AforeCoppel 1080x1080 (1).jpg" alt="Logo de la Empresa" class="h-12 sm:h-16 object-contain">
+    <!-- CABECERA CON EL LOGO GIGANTE Y CENTRADO -->
+    <header class="max-w-7xl mx-auto relative mb-12 mt-4 flex flex-col items-center justify-center gap-6 z-20">
+        <div>
+            <img src="Logo AforeCoppel 1080x1080 (1).jpg" alt="Logo de la Empresa" class="h-32 sm:h-40 md:h-48 object-contain rounded-2xl shadow-lg bg-white p-2 border border-gray-100">
         </div>
         <div class="text-center">
-            <h1 class="text-3xl md:text-4xl font-bold text-[var(--color-blue)]">Organigrama Interactivo</h1>
-            <p class="text-xl text-gray-600 mt-2">Gerencia de Atención al Público</p>
+            <h1 class="text-3xl md:text-5xl font-bold text-[var(--color-blue)] tracking-tight">Organigrama Interactivo</h1>
+            <p class="text-xl md:text-2xl text-gray-600 mt-2 font-medium">Gerencia de Atención al Público</p>
         </div>
     </header>
 
     <!-- Controles Dinámicos -->
-    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row gap-4 justify-center items-center mb-8 p-4 bg-gray-50 rounded-lg shadow-sm z-20 relative">
-        <input type="text" id="search-box" placeholder="Buscar por nombre..." class="w-full sm:w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--color-yellow)] focus:border-[var(--color-blue)]">
-        <button id="view-toggle" class="px-4 py-2 bg-[var(--color-blue)] text-white font-semibold rounded-lg hover:bg-opacity-90 transition-colors">
+    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row gap-4 justify-center items-center mb-8 p-4 bg-white/80 backdrop-blur-sm rounded-lg shadow-sm z-20 relative border border-gray-200">
+        <input type="text" id="search-box" placeholder="Buscar por nombre..." class="w-full sm:w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--color-yellow)] focus:border-[var(--color-blue)] outline-none transition-all">
+        <button id="view-toggle" class="px-6 py-2 bg-[var(--color-blue)] text-white font-semibold rounded-lg hover:bg-opacity-90 transition-colors shadow-md">
             Cambiar a Vista Horizontal
         </button>
     </div>
 
     <!-- Contenedor del Organigrama -->
-    <div id="org-chart-container" class="overflow-x-auto pb-8 text-center vertical-view">
-        <!-- VISTA VERTICAL: El contenido se generará dinámicamente -->
-        <div id="vertical-view" class="tree inline-block min-w-full align-top">
+    <div id="org-chart-container" class="pb-8 vertical-view min-h-[60vh]">
+        <div id="vertical-view" class="tree">
              <ul><!-- El contenido se insertará aquí vía JS --></ul>
         </div>
-        <!-- VISTA HORIZONTAL: El contenido se generará dinámicamente -->
         <div id="horizontal-view" class="tree-container hidden">
             <!-- El contenido se insertará aquí vía JS -->
         </div>
@@ -243,12 +174,12 @@
     <!-- Modals -->
     <div id="zoomModal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center p-4 z-50">
         <div id="modalContent" class="bg-white rounded-lg shadow-2xl p-6 relative max-w-sm w-full text-center">
-            <button id="closeModal" class="absolute -top-3 -right-3 text-white bg-red-500 rounded-full h-8 w-8 flex items-center justify-center text-lg font-bold hover:bg-red-700">&times;</button>
+            <button id="closeModal" class="absolute -top-3 -right-3 text-white bg-red-500 rounded-full h-8 w-8 flex items-center justify-center text-lg font-bold hover:bg-red-700 shadow-md">&times;</button>
         </div>
     </div>
     <div id="imageZoomModal" class="fixed inset-0 bg-black bg-opacity-80 hidden items-center justify-center p-4 z-50">
-        <button id="closeImageModal" class="absolute top-4 right-4 text-white text-4xl font-bold hover:text-gray-300">&times;</button>
-        <img id="zoomedImage" src="" alt="Vista ampliada" class="max-w-full max-h-[90vh] rounded-lg shadow-lg">
+        <button id="closeImageModal" class="absolute top-4 right-4 text-white text-5xl font-bold hover:text-gray-300 transition-colors">&times;</button>
+        <img id="zoomedImage" src="" alt="Vista ampliada" class="max-w-full max-h-[90vh] rounded-lg shadow-2xl border-4 border-white">
     </div>
 
     <script>
@@ -264,7 +195,7 @@
                 email: 'miguel.garcias@aforecoppel.com',
                 imgText: 'MG',
                 level: 'manager',
-                image: 'miguel_foto.webp', // Actualizado a .webp
+                image: 'miguel_foto.webp', 
                 children: [
                     {
                         id: 'irain',
@@ -279,7 +210,7 @@
                             { id: 'gloria', name: 'Gloria Alejandra Sanchez Ibarra', role: 'Ejecutivo de Atención', roleDetail: 'CRM MAO Monitoreos MAO, CRM Módulo Atención', email: 'gloria.sanchez@aforecoppel.com', imgText: 'GS', level: 'executive', image: 'gloria_sanchez.webp' },
                             { id: 'diana', name: 'Diana Isbeth Vega Villa', role: 'Ejecutivo de Atención', roleDetail: 'CRM MAO Monitoreos MAO, Formulario Web', email: 'diana.vega@aforecoppel.com', imgText: 'DV', level: 'executive', image: 'diana_vega.webp' },
                             { id: 'maria', name: 'Maria De Los Angeles Leyva German', role: 'Ejecutivo de Atención', roleDetail: 'CRM MAO Monitoreos MAO, Atención CRAs', email: 'maria.leyva@aforecoppel.com', imgText: 'ML', level: 'executive', image: 'maria_leyva.jpg' },
-                            { id: 'vianney', name: 'Vianney Iracema Castillo Montano', role: 'Ejecutivo de Atención', roleDetail: 'CRM Módulo Atención, Quejas', email: 'vianney.castillo@aforecoppel.com', imgText: 'VC', level: 'executive', image: 'vianney_castillo.webp' },
+                            { id: 'vianney', name: 'Vianney Iracema Castillo Montano', role: 'Ejecutivo de Atención', roleDetail: 'CRM Módulo Atención, Quejas', email: 'vianney.castillo@aforecoppel.com', imgText: 'VC', level: 'executive', image: 'vianney_castillo.webp' }
                         ]
                     },
                     {
@@ -303,7 +234,7 @@
                         level: 'chief',
                         image: 'jesus_gutierrez.webp',
                         children: [
-                             { id: 'jesus-noe', name: 'Jesús Noe Pinedo Beltrán', role: 'Ejecutivo de Atención', roleDetail: 'CRM CAT Datos CAT', email: 'jesus.pinedo@aforecoppel.com', imgText: 'JP', level: 'executive', image: 'noe_pinedo.webp' }, // Actualizado a .webp
+                             { id: 'jesus-noe', name: 'Jesús Noe Pinedo Beltrán', role: 'Ejecutivo de Atención', roleDetail: 'CRM CAT Datos CAT', email: 'jesus.pinedo@aforecoppel.com', imgText: 'JP', level: 'executive', image: 'noe_pinedo.webp' },
                              { id: 'isabel', name: 'Isabel Guadalupe Salazar', role: 'Ejecutivo de Atención', roleDetail: 'CRM CAT Diálogos y Capacitación CAT', email: 'isabel.salazar@aforecoppel.com', imgText: 'IS', level: 'executive', image: 'isabel_foto.jpg' },
                              { id: 'dania', name: 'Dania Chávez', role: 'Ejecutivo de Atención', roleDetail: 'CRM CAT MPP y Capacitación CAT', email: 'dania.chavez@aforecoppel.com', imgText: 'DC', level: 'executive', image: 'dania_chavez.webp' },
                              { id: 'domenika', name: 'Domenika Guadalupe Felix Castro', role: 'Ejecutivo de Atención', roleDetail: 'CRM CAT & Seguimiento al cumplimiento MPP', email: 'domenika.felix@aforecoppel.com', imgText: 'DF', level: 'executive', image: 'domenika_felix.webp' },
@@ -311,6 +242,7 @@
                     }
                 ]
             };
+
 
             // =================================================================================
             // 2. FUNCIONES PARA GENERAR HTML
@@ -324,36 +256,24 @@
                 if (person.level === 'support') dataAttrs += ` data-team="${person.team.join(' ')}"`;
                 
                 let styles = {
-                    manager: { wrapper: 'p-4 border-t-8', img: 'w-20 h-20 border-4', title: 'text-lg', color: 'border-[var(--color-blue)]' },
-                    chief: { wrapper: 'p-3 border-t-4', img: 'w-16 h-16 border-2', title: 'text-md', color: 'border-[var(--color-blue)]' },
-                    executive: { wrapper: 'p-3 border-t-2', img: 'w-16 h-16 border-2', title: 'text-sm', color: 'border-[var(--color-yellow)]' },
-                    support: { wrapper: 'p-3 border-t-4', img: 'w-16 h-16 border-2', title: 'text-md', color: 'border-teal-500', titleColor: 'text-teal-800' },
+                    manager: { wrapper: 'p-4 border-t-8', img: 'w-24 h-24 border-4', title: 'text-lg', color: 'border-[var(--color-blue)]' },
+                    chief: { wrapper: 'p-4 border-t-4', img: 'w-20 h-20 border-2', title: 'text-md', color: 'border-[var(--color-blue)]' },
+                    executive: { wrapper: 'p-4 border-t-4', img: 'w-16 h-16 border-2', title: 'text-sm', color: 'border-[var(--color-yellow)]' },
+                    support: { wrapper: 'p-4 border-t-4', img: 'w-16 h-16 border-2', title: 'text-md', color: 'border-teal-500', titleColor: 'text-teal-800' },
                 };
-                
-                if (person.isVacant) {
-                    return `
-                        <div class="card-wrapper" data-name="vacante">
-                            <div class="card-content bg-white rounded-lg shadow-md p-3 border-t-4 border-[var(--color-blue)] cursor-pointer hover:shadow-xl hover:-translate-y-1">
-                                <div class="w-16 h-16 rounded-full mx-auto mb-2 bg-gray-200 flex items-center justify-center border-2 border-[var(--color-blue)]"><svg class="w-10 h-10 text-gray-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg></div>
-                                <h3 class="font-bold text-md text-[var(--color-blue)]">${person.name}</h3>
-                                <p class="text-xs text-gray-500">${person.role}</p>
-                                ${person.roleDetail ? `<p class="text-xs font-semibold text-gray-700 mt-1">${person.roleDetail}</p>` : ''}
-                            </div>
-                        </div>`;
-                }
 
                 const s = styles[person.level] || styles.executive;
                 const imgColor = person.level === 'executive' ? 'FFD966/000000' : '002060/FFFFFF';
-                const placeholderUrl = `https://placehold.co/${s.img.includes('20') ? '80x80' : '64x64'}/${person.level === 'support' ? '14B8A6/FFFFFF' : imgColor}?text=${person.imgText}`;
+                const placeholderUrl = `https://placehold.co/${s.img.includes('24') ? '96x96' : '80x80'}/${person.level === 'support' ? '14B8A6/FFFFFF' : imgColor}?text=${person.imgText}`;
                 const finalImgUrl = person.image ? person.image : placeholderUrl;
 
                 return `
                     <div class="card-wrapper" ${dataAttrs}>
                         <div class="card-content bg-white rounded-lg shadow-lg ${s.wrapper} ${s.color} cursor-pointer hover:shadow-2xl hover:-translate-y-1">
-                            <img src="${finalImgUrl}" alt="Fotografía de perfil de ${person.name}" class="${s.img} rounded-full mx-auto mb-3 object-cover ${s.color}" onerror="this.src='${placeholderUrl}'; this.onerror=null;">
+                            <img src="${finalImgUrl}" alt="Fotografía de ${person.name}" class="${s.img} rounded-full object-cover ${s.color}" onerror="this.src='${placeholderUrl}'; this.onerror=null;">
                             <h3 class="font-bold ${s.title} ${s.titleColor || 'text-[var(--color-blue)]'}">${person.name}</h3>
-                            <p class="text-sm text-gray-600">${person.role}</p>
-                            ${isVertical && person.roleDetail ? `<p class="text-xs font-semibold text-gray-700 mt-1">${person.roleDetail}</p>` : ''}
+                            <p class="text-sm text-gray-600 mt-1">${person.role}</p>
+                            ${isVertical && person.roleDetail ? `<p class="text-xs font-semibold text-gray-700 mt-2">${person.roleDetail}</p>` : ''}
                         </div>
                     </div>`;
             }
@@ -438,6 +358,10 @@
             function setupVerticalSupportConnections() {
                 const container = document.querySelector('#vertical-view > ul');
                 if (!container) return;
+                
+                // Limpiar SVG anterior si existe
+                const oldSvg = container.querySelector('svg');
+                if(oldSvg) oldSvg.remove();
 
                 const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
                 svg.style.position = 'absolute';
@@ -492,6 +416,10 @@
             function setupHorizontalConnections() {
                 const container = document.getElementById('horizontal-view');
                 if (!container) return;
+                
+                // Limpiar SVG anterior
+                const oldSvg = container.querySelector('svg');
+                if(oldSvg) oldSvg.remove();
 
                 const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
                 svg.style.position = 'absolute';
@@ -504,7 +432,6 @@
                 container.style.position = 'relative';
                 container.appendChild(svg);
                 
-                // Dibujar líneas de soporte primero
                 const supportRoles = findSupportRoles(orgData);
                 supportRoles.forEach(person => {
                     const sourceNode = document.getElementById(`h-li-${person.id}`);
@@ -517,7 +444,20 @@
                 });
             }
 
-            requestAnimationFrame(setupVerticalSupportConnections);
+            // Timeout pequeño para asegurar que todo haya cargado antes de dibujar SVG
+            setTimeout(() => {
+                requestAnimationFrame(setupVerticalSupportConnections);
+            }, 100);
+
+            // Re-dibujar líneas de soporte si la pantalla cambia de tamaño
+            window.addEventListener('resize', () => {
+                const isVertical = !verticalView.classList.contains('hidden');
+                if(isVertical) {
+                    requestAnimationFrame(setupVerticalSupportConnections);
+                } else {
+                    requestAnimationFrame(setupHorizontalConnections);
+                }
+            });
 
             // =================================================================================
             // 4. LÓGICA DE INTERACTIVIDAD
@@ -583,10 +523,12 @@
                     document.getElementById('org-chart-container').classList.add('horizontal-view');
                     document.getElementById('org-chart-container').classList.remove('vertical-view');
                      if (!horizontalLinesDrawn) {
-                        requestAnimationFrame(() => {
-                           setupHorizontalConnections();
-                           horizontalLinesDrawn = true;
-                        });
+                        setTimeout(() => {
+                            requestAnimationFrame(() => {
+                               setupHorizontalConnections();
+                               horizontalLinesDrawn = true;
+                            });
+                        }, 50);
                     }
                 } else {
                     horizontalContainer.classList.add('hidden');
@@ -594,6 +536,7 @@
                     viewToggle.textContent = 'Cambiar a Vista Horizontal';
                     document.getElementById('org-chart-container').classList.add('vertical-view');
                     document.getElementById('org-chart-container').classList.remove('horizontal-view');
+                    setTimeout(() => requestAnimationFrame(setupVerticalSupportConnections), 50);
                 }
             });
 
@@ -612,12 +555,14 @@
                         
                         const newContent = cardContent.cloneNode(true);
                         newContent.classList.add('card-clone');
+                        // Se remueve el ancho fijo en el modal para que se adapte al diseño vertical
+                        newContent.style.width = '100%';
                         newContent.classList.remove('cursor-pointer', 'hover:shadow-2xl', 'hover:-translate-y-1', 'hover:shadow-xl', 'hover:shadow-lg', 'h-full');
                         
                         const imgClone = newContent.querySelector('img');
                         if (imgClone) {
-                            imgClone.classList.remove('w-16','w-20','h-16','h-20');
-                            imgClone.classList.add('w-24', 'h-24');
+                            imgClone.classList.remove('w-16','w-20','w-24','h-16','h-20','h-24');
+                            imgClone.classList.add('w-28', 'h-28', 'mx-auto');
                         }
                         
                         modalContent.appendChild(newContent);
@@ -627,11 +572,11 @@
                             const contactInfo = document.createElement('div');
                             contactInfo.classList.add('mt-4','pt-4','border-t','text-left','text-sm', 'space-y-3');
                             contactInfo.innerHTML = `
-                                <p class="flex items-center text-gray-700">
+                                <p class="flex items-center justify-center text-gray-700">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25-2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" /></svg>
                                     <a href="mailto:${email}" class="hover:underline">${email}</a>
                                 </p>
-                                <a href="https://teams.microsoft.com/l/chat/0/0?users=${email}" target="_blank" rel="noopener noreferrer" class="w-full flex items-center justify-center px-3 py-2 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition-colors">
+                                <a href="https://teams.microsoft.com/l/chat/0/0?users=${email}" target="_blank" rel="noopener noreferrer" class="w-full flex items-center justify-center px-3 py-2 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition-colors shadow-sm">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M21.92,6.58A1,1,0,0,0,21,6H16.5A1.5,1.5,0,0,0,15,7.5V12H13V7.5A1.5,1.5,0,0,0,11.5,6H7A1,1,0,0,0,6,7V17a1,1,0,0,0,1,1h.5a1.5,1.5,0,0,0,1.5-1.5V12h2v4.5A1.5,1.5,0,0,0,13.5,18H18a1,1,0,0,0,1-1V9.42l2.92,2.92A1,1,0,0,0,22.62,11.62Z"></path><path d="M4,6A2,2,0,1,0,6,8,2,2,0,0,0,4,6Z"></path><path d="M11,10.5A2.5,2.5,0,1,0,13.5,13,2.5,2.5,0,0,0,11,10.5Z"></path><path d="M19,10a2,2,0,1,0,2,2,2,2,0,0,0-2-2Z"></path></svg>
                                     Iniciar Chat en Teams
                                 </a>
